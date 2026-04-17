@@ -1,0 +1,162 @@
+{
+  "info": {
+    "_postman_id": "fe7a89e8-ca17-4256-9fa6-f470e8e151cf",
+    "name": "User_Module_Part1_Collection_Anusha",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33495769",
+    "_collection_link": "https://go.postman.co/collection/33495769-fe7a89e8-ca17-4256-9fa6-f470e8e151cf?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create User",
+      "item": [
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// let res = pm.response.json();\r",
+                  "// pm.environment.set(\"token\", res.token);\r",
+                  "// console.log(\"Token saved:\", res.token);\r",
+                  "\r",
+                  "pm.test(\"An access token is returned\", () => {\r",
+                  "    pm.expect(pm.response.json()).to.have.property('token')\r",
+                  "    pm.expect(pm.response.json().token).to.be.a('string')\r",
+                  "    // Set the collection-scope \"token\" variable to the token received from the API\r",
+                  "    // This lets us use it in other requests\r",
+                  "    pm.collectionVariables.set('token', pm.response.json().token)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userLoginEmailId\": \"Team004@gmail.com\",\r\n  \"password\": \"Team04@4003\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/login",
+              "protocol": "https",
+              "host": [
+                "lms-hackathon-api-april-2026-8b55b53c8fab",
+                "herokuapp",
+                "com"
+              ],
+              "path": [
+                "lms",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "createUser",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userComments\": \"INACTIVE\",\r\n  \"userEduPg\": \"MS\",\r\n  \"userEduUg\": \"BTech\",\r\n  \"userFirstName\": \"Charlie\",\r\n  \"userLastName\": \"S\",\r\n  \"userMiddleName\": \"C\",\r\n  \"userPhoneNumber\": \"+1 6401003123\",\r\n  \"userLinkedinUrl\": \"www.linkedin.com/charlie\",\r\n  \"userLocation\": \"California\",\r\n  \"userLogin\": {\r\n    \"loginStatus\": \"Inactive\",\r\n    \"userLoginEmail\": \"charlie.s@gmail.com\"\r\n  },\r\n  \"userRoleMaps\": [\r\n    {\r\n      \"roleId\": \"R03\",\r\n      \"userRoleStatus\": \"Active\"\r\n    }\r\n  ],\r\n  \"userTimeZone\": \"PST\",\r\n  \"userVisaStatus\": \"H4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://lms-hackathon-api-april\n-2026-8b55b53c8fab.herokuap\np.com/lms/users/roleStatus",
+              "protocol": "https",
+              "host": [
+                "lms-hackathon-api-april\n-2026-8b55b53c8fab",
+                "herokuap\np",
+                "com"
+              ],
+              "path": [
+                "lms",
+                "users",
+                "roleStatus"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

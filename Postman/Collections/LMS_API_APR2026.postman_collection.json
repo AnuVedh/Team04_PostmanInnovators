@@ -1749,6 +1749,443 @@
       ]
     },
     {
+      "name": "User-Golda",
+      "item": [
+        {
+          "name": "PostiveTesta",
+          "item": [
+            {
+              "name": "Get All Users with Facets/Filters",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// 1. Status code is 200",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "// 2. Response time is less than 3000ms",
+                      "pm.test(\"Response time is less than 3000ms\", function () {",
+                      "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                      "});",
+                      "",
+                      "// 3. Response body contains a \"users\" key",
+                      "pm.test(\"Response body contains a 'users' key\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData).to.have.property(\"users\");",
+                      "});",
+                      "",
+                      "// 4. \"users\" is an array",
+                      "pm.test(\"'users' is an array\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.users).to.be.an(\"array\");",
+                      "});",
+                      "",
+                      "// 5. Each user object has the required fields",
+                      "pm.test(\"Each user object has the required fields\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    const requiredFields = [\"userId\", \"userFirstName\", \"userLastName\", \"userLoginEmail\", \"userVisaStatus\"];",
+                      "    jsonData.users.forEach(function (user) {",
+                      "        requiredFields.forEach(function (field) {",
+                      "            pm.expect(user).to.have.property(field);",
+                      "        });",
+                      "    });",
+                      "});",
+                      "",
+                      "// 6. userId values are non-empty strings",
+                      "pm.test(\"userId values are non-empty strings\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    jsonData.users.forEach(function (user) {",
+                      "        pm.expect(user.userId).to.be.a(\"string\").and.to.not.be.empty;",
+                      "    });",
+                      "});",
+                      "",
+                      "// 7. userLoginEmail values match a basic email format (contain \"@\")",
+                      "pm.test(\"userLoginEmail values contain '@'\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    jsonData.users.forEach(function (user) {",
+                      "        pm.expect(user.userLoginEmail).to.include(\"@\");",
+                      "    });",
+                      "});",
+                      "",
+                      "// 8. Response schema is valid",
+                      "pm.test(\"Response schema is valid\", function () {",
+                      "    const schema = {",
+                      "        \"type\": \"object\",",
+                      "        \"properties\": {",
+                      "            \"users\": {",
+                      "                \"type\": \"array\",",
+                      "                \"items\": {",
+                      "                    \"type\": \"object\",",
+                      "                    \"properties\": {",
+                      "                        \"userId\":          { \"type\": \"string\" },",
+                      "                        \"userFirstName\":   { \"type\": \"string\" },",
+                      "                        \"userLastName\":    { \"type\": \"string\" },",
+                      "                        \"userMiddleName\":  { \"type\": \"string\" },",
+                      "                        \"userPhoneNumber\": { \"type\": \"string\" },",
+                      "                        \"userLocation\":    { \"type\": \"string\" },",
+                      "                        \"userTimeZone\":    { \"type\": \"string\" },",
+                      "                        \"userLinkedinUrl\": { \"type\": [\"string\", \"null\"] },",
+                      "                        \"userEduUg\":       { \"type\": [\"string\", \"null\"] },",
+                      "                        \"userEduPg\":       { \"type\": [\"string\", \"null\"] },",
+                      "                        \"userComments\":    { \"type\": [\"string\", \"null\"] },",
+                      "                        \"userVisaStatus\":  { \"type\": \"string\" },",
+                      "                        \"userLoginEmail\":  { \"type\": \"string\" }",
+                      "                    },",
+                      "                    \"required\": [\"userId\", \"userFirstName\", \"userLastName\", \"userPhoneNumber\", \"userLocation\", \"userTimeZone\", \"userVisaStatus\", \"userLoginEmail\"]",
+                      "                }",
+                      "            },",
+                      "            \"facets\": {",
+                      "                \"type\": \"object\",",
+                      "                \"properties\": {",
+                      "                    \"facetedFields\": {",
+                      "                        \"type\": \"array\",",
+                      "                        \"items\": {",
+                      "                            \"type\": \"object\",",
+                      "                            \"properties\": {",
+                      "                                \"displayName\": { \"type\": \"string\" },",
+                      "                                \"filterValues\": {",
+                      "                                    \"type\": \"array\",",
+                      "                                    \"items\": {",
+                      "                                        \"type\": \"object\",",
+                      "                                        \"properties\": {",
+                      "                                            \"count\": { \"type\": \"number\" },",
+                      "                                            \"name\":  { \"type\": \"string\" }",
+                      "                                        },",
+                      "                                        \"required\": [\"count\", \"name\"]",
+                      "                                    }",
+                      "                                }",
+                      "                            },",
+                      "                            \"required\": [\"displayName\", \"filterValues\"]",
+                      "                        }",
+                      "                    }",
+                      "                }",
+                      "            }",
+                      "        },",
+                      "        \"required\": [\"users\"]",
+                      "    };",
+                      "",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(tv4.validate(response, schema)).to.be.true;",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurl}}/v2/users",
+                  "host": [
+                    "{{baseurl}}"
+                  ],
+                  "path": [
+                    "v2",
+                    "users"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetUserByRoleId",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// 1. Status code is 200",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "// 2. Response time is less than 3000ms",
+                      "pm.test(\"Response time is less than 3000ms\", function () {",
+                      "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                      "});",
+                      "",
+                      "// 3. Response body is an array",
+                      "pm.test(\"Response body is an array\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData).to.be.an(\"array\");",
+                      "});",
+                      "",
+                      "// 4. Response array is not empty",
+                      "pm.test(\"Response array is not empty\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData).to.have.length.above(0);",
+                      "});",
+                      "",
+                      "// 5. Each user object has the required fields",
+                      "pm.test(\"Each user object has the required fields: userId, userFirstName, userLastName, userLoginEmail\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    jsonData.forEach(function (user) {",
+                      "        pm.expect(user).to.have.property(\"userId\");",
+                      "        pm.expect(user).to.have.property(\"userFirstName\");",
+                      "        pm.expect(user).to.have.property(\"userLastName\");",
+                      "        pm.expect(user).to.have.property(\"userLoginEmail\");",
+                      "    });",
+                      "});",
+                      "",
+                      "// 6. Each userId starts with \"U\"",
+                      "pm.test(\"Each userId starts with 'U'\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    jsonData.forEach(function (user) {",
+                      "        pm.expect(user.userId).to.match(/^U/);",
+                      "    });",
+                      "});",
+                      "",
+                      "// 7. Each userLoginEmail is a valid email format (contains \"@\" and \".\")",
+                      "pm.test(\"Each userLoginEmail is a valid email format\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    jsonData.forEach(function (user) {",
+                      "        pm.expect(user.userLoginEmail).to.include(\"@\");",
+                      "        pm.expect(user.userLoginEmail).to.include(\".\");",
+                      "    });",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseurl}}/users/roles/{{roleid}}",
+                  "host": [
+                    "{{baseurl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "roles",
+                    "{{roleid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UpdateUserByUserId",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "",
+                      "// 1. Status code is 200",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "// 2. Response time is less than 2000ms",
+                      "pm.test(\"Response time is less than 2000ms\", function () {",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                      "});",
+                      "",
+                      "// 3. Response has a JSON body",
+                      "pm.test(\"Response has a JSON body\", function () {",
+                      "    pm.response.to.be.json;",
+                      "});",
+                      "",
+                      "// 4. Response contains userId field",
+                      "pm.test(\"Response contains userId field\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData).to.have.property(\"userId\");",
+                      "});",
+                      "",
+                      "// 5. userFirstName matches the value sent in the request body",
+                      "pm.test(\"userFirstName matches request value\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.userFirstName).to.eql(pm.environment.get(\"userFirstName\"));",
+                      "});",
+                      "",
+                      "// 6. userLastName matches the value sent in the request body",
+                      "pm.test(\"userLastName matches request value\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.userLastName).to.eql(pm.environment.get(\"userLastName\"));",
+                      "});",
+                      "",
+                      "// 7. userLoginEmail matches the value sent in the request body",
+                      "pm.test(\"userLoginEmail matches request value\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.userLoginEmail).to.eql(pm.environment.get(\"userLoginEmail\"));",
+                      "});",
+                      "",
+                      "// 8. Response body contains all expected fields",
+                      "pm.test(\"Response body contains all expected fields\", function () {",
+                      "    const jsonData = pm.response.json();",
+                      "    const expectedFields = [",
+                      "        \"userId\", \"userFirstName\", \"userLastName\", \"userMiddleName\",",
+                      "        \"userPhoneNumber\", \"userLocation\", \"userTimeZone\", \"userLinkedinUrl\",",
+                      "        \"userEduUg\", \"userEduPg\", \"userComments\", \"userVisaStatus\", \"userLoginEmail\"",
+                      "    ];",
+                      "    expectedFields.forEach(function (field) {",
+                      "        pm.expect(jsonData).to.have.property(field);",
+                      "    });",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userComments\": \"{{userComments}}\",\r\n  \"userEduPg\": \"{{userEduPg}}\",\r\n  \"userEduUg\": \"{{userEduUg}}\",\r\n  \"userFirstName\": \"{{userFirstName}}\",\r\n  \"userId\": \"{{userId}}\",\r\n  \"userLastName\": \"{{userLastName}}\",\r\n  \"userMiddleName\": \"{{userMiddleName}}\",\r\n  \"userLinkedinUrl\": \"{{userLinkedinUrl}}\",\r\n  \"userLocation\": \"{{userLocation}}\",\r\n  \"userLoginEmail\": \"{{userLoginEmail}}\",\r\n  \"userPhoneNumber\": \"{{userPhoneNumber}}\",\r\n  \"userTimeZone\": \"{{userTimeZone}}\",\r\n  \"userVisaStatus\": \"{{userVisaStatus}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseurl}}/users/{{userid}}",
+                  "host": [
+                    "{{baseurl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetUserBatchIdByUserId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurl}}/users/user/{{userid}}",
+                  "host": [
+                    "{{baseurl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "user",
+                    "{{userid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetBatchByProgramId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurl}}/batches/program/307",
+                  "host": [
+                    "{{baseurl}}"
+                  ],
+                  "path": [
+                    "batches",
+                    "program",
+                    "307"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetUserDetailsByUserId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurl}}/users/details/{{userid}}",
+                  "host": [
+                    "{{baseurl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "details",
+                    "{{userid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetUserByProgramId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UpdateUserRoleId",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\"userRoleList\": [\r\n{\r\n\"roleId\": \"string\",\r\n\"userRoleStatus\": \"string\"\r\n}\r\n]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseurl}}/users/roleId/{userID}",
+                  "host": [
+                    "{{baseurl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "roleId",
+                    "{userID}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "NegativeTests",
+          "item": []
+        }
+      ]
+    },
+    {
       "name": "New Request",
       "request": {
         "method": "GET",
